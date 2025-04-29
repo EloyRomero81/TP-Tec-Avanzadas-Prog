@@ -15,28 +15,28 @@ En el proceso de carga se debe validar que no se superpongan los espectaculos en
 # Desarrollo:
 ## 1. **Diagrama de clases (versión básica inicial)**
 
-![image](https://github.com/user-attachments/assets/e1e9879f-f26a-4758-b8b5-faf2b9028b13)
+![image](https://github.com/user-attachments/assets/7f150312-d60b-41e6-b924-ffe3964dd208)
 
 ---
 
 ## 2. **Modelo de datos**
 
-- `usuarios` (id, nombre, email, contraseña encriptada)
-- `salas` (id, nombre, capacidad, tipo_precio)
-- `funciones` (id, artista, fecha, hora, sala_id, tipo_show, duración)
-- `entradas` (id, espectaculo_id, tipo_entrada, precio, vendida: boolean)
+![image](https://github.com/user-attachments/assets/ce049bc1-53c8-4460-bd7f-96ea34048597)
 
 ---
 
 ## 3. **Tecnologías elegidas**
 
-- **Lenguaje**: Java 17
+- **Lenguaje**: Java 17.
 Elegí Java porque es un lenguaje que mejor conozco, es confiable y se usa mucho en proyectos grandes. La versión 17 es bastante actual, estable y tiene mejoras que lo hacen más cómodo de usar.
-- **Backend**: Spring Boot (extensión del framework Spring)
+
+- **Backend**: Spring Boot (extensión del framework Spring).
 Spring Boot ayuda a crear aplicaciones de backend más rápido. Viene con muchas cosas ya listas para usar, como la conexión a la base de datos y el manejo de errores. Además, es muy común en proyectos con Java, y como no lo habia utilizado antes, me gustaría probarlo y sumar experiencia.
-- **Frontend**: React con Next.js
+
+- **Frontend**: React con Next.js.
 Usaré React porque es una herramienta muy buena para hacer páginas web interactivas. Next.js mejora todavía más React, ayudando a que las páginas carguen más rápido y se organicen mejor.
-- **Base de datos**: PostgreSQL
+
+- **Base de datos**: PostgreSQL.
 Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de base de datos relacional. En particular, opté por PostgreSQL porque es una base de datos muy completa y segura, ideal para este tipo de sistemas
 
 ---
