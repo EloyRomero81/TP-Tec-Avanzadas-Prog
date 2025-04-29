@@ -28,15 +28,19 @@ En el proceso de carga se debe validar que no se superpongan los espectaculos en
 ## 3. **Tecnologías elegidas**
 
 - **Lenguaje**: Java 17.
-Elegí Java porque es un lenguaje que mejor conozco, es confiable y se usa mucho en proyectos grandes. La versión 17 es bastante actual, estable y tiene mejoras que lo hacen más cómodo de usar.
+
+Elegí Java porque es el lenguaje que mejor conozco, es confiable y se usa mucho en proyectos grandes. La versión 17 es bastante actual, estable y tiene mejoras que lo hacen más cómodo de usar.
 
 - **Backend**: Spring Boot (extensión del framework Spring).
+
 Spring Boot ayuda a crear aplicaciones de backend más rápido. Viene con muchas cosas ya listas para usar, como la conexión a la base de datos y el manejo de errores. Además, es muy común en proyectos con Java, y como no lo habia utilizado antes, me gustaría probarlo y sumar experiencia.
 
 - **Frontend**: React con Next.js.
+
 Usaré React porque es una herramienta muy buena para hacer páginas web interactivas. Next.js mejora todavía más React, ayudando a que las páginas carguen más rápido y se organicen mejor.
 
 - **Base de datos**: PostgreSQL.
+
 Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de base de datos relacional. En particular, opté por PostgreSQL porque es una base de datos muy completa y segura, ideal para este tipo de sistemas
 
 ---
