@@ -15,7 +15,7 @@ En el proceso de carga se debe validar que no se superpongan los espectaculos en
 # Desarrollo:
 ## 1. **Diagrama de clases (versión básica inicial)**
 
-![image](https://github.com/user-attachments/assets/beb991e7-12f7-4289-944a-bf1c0c237ff2)
+![image](https://github.com/user-attachments/assets/e1e9879f-f26a-4758-b8b5-faf2b9028b13)
 
 ---
 
