@@ -15,18 +15,7 @@ En el proceso de carga se debe validar que no se superpongan los espectaculos en
 # Desarrollo:
 ## 1. **Diagrama de clases (versión básica inicial)**
 
-- `Usuario`
-    - Atributos: int id, String nombre, String email.
-    - Métodos: Usuario crearUsuario(), void comprarEntrada(),
-- `Sala`
-    - Atributos: int nroSala, String nombreSala, int capacidad.
-    - Métodos:
-- `Funcion`
-    - Atributos: int idEspectaculo, int nroSala, date fechaFuncion, int horaFuncion, int idArtistaFuncion, int duracion, String tipoFuncion.
-    - Métodos: Funcion crearFuncion().
-- `Entrada`
-    - Atributos: idEntrada, idFuncion, idUsuario, precio
-    - Métodos: calcularPrecio()
+![image](https://github.com/user-attachments/assets/beb991e7-12f7-4289-944a-bf1c0c237ff2)
 
 ---
 
