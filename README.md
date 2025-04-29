@@ -9,6 +9,7 @@ Para lo cual un usuario registrado en el sistema registra la siguiente informaci
 - Precio de la entrada
 - Duración
 - Tipo de show (infantil, musical, obra de teatro)
+
 En el proceso de carga se debe validar que no se superpongan los espectaculos en una misma fecha y hora, para permitir la carga de espectaculos un mismo día, debe haber una hora libre en la sala para su limpieza previa al inicio del proximo show. El sistema debe poder mostrar los espectaculos próximos a presentarse en la sala, así como los anteriores, en este ultimo caso por supuesto no debe poder permitir realizar la compra de entradas.
 
 # Desarrollo:
