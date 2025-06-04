@@ -1,0 +1,63 @@
+package com.tec_avan_prog_2025.app.tp_tec_avan_prog.services;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.CuentaDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.mappers.CuentaMapper;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Cuenta;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.repositorios.Repo_Cuenta;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class Cuenta_Service {
+    @Autowired
+    private Repo_Cuenta repo_Cuenta;
+    @Autowired
+    private CuentaMapper cuentaMapper;
+    @Autowired
+    @Lazy
+    private Entrada_Service entrada_Service;
+
+
+    public List<CuentaDTO> listarCuentas(){
+        return repo_Cuenta.findAll().stream()
+        .map(cuentaMapper::cuentaToCuentaDTO)
+        .collect(Collectors.toList());
+    }
+
+    public Optional<CuentaDTO> buscarDTOPorId(Integer id){
+        return repo_Cuenta.findById(id)
+        .map(cuentaMapper::cuentaToCuentaDTO);  
+    }
+
+    public Cuenta buscarPorId(Integer id){
+        return repo_Cuenta.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Cuenta con id: "+id+" no encontrado"));
+    }
+
+    public CuentaDTO guardar(CuentaDTO cuentaDTO){
+        Cuenta cuenta = cuentaMapper.cuentaDTOToCuenta(cuentaDTO);
+        return cuentaMapper.cuentaToCuentaDTO(repo_Cuenta.save(cuenta));
+    }
+
+    public CuentaDTO actualizar(Integer id, CuentaDTO cuentaDTO){
+        Cuenta cuentaExistente = buscarPorId(id);
+        cuentaExistente.setTipoCuenta(cuentaDTO.getTipoCuenta());
+        cuentaExistente.setNombre(cuentaDTO.getNombre());
+        cuentaExistente.setEmail(cuentaDTO.getEmail());
+        return cuentaMapper.cuentaToCuentaDTO(repo_Cuenta.save(cuentaExistente));
+    }
+
+    public void eliminarPorId(Integer id){
+        buscarPorId(id);
+        entrada_Service.desvincularEntradasDeCuenta(id);
+        repo_Cuenta.deleteById(id);
+    }
+}

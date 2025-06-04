@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${Titulo}">Página inicial</title>
+</head>
+<body>
+    <h1>Información de cuenta</h1>
+    <ul>
+        <li><strong>ID Cuenta:</strong> <span th:text="${Cuenta.idCuenta}"></span></li>
+        <li><strong>Nombre:</strong> <span th:text="${Cuenta.nombreCuenta}"></span></li>
+        <li><strong>Email:</strong> <span th:text="${Cuenta.emailCuenta}"></span></li>
+    </ul>
+
+    <h1>Lista de Cuentas</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID cuenta</th>
+                <th>Nombre cuenta</th>
+                <th>Email Cuenta</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="Cuenta : ${Cuentas}">
+                <td th:text="${Cuenta.idCuenta}"></td>
+                <td th:text="${Cuenta.nombreCuenta}"></td>
+                <td th:text="${Cuenta.emailCuenta}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
