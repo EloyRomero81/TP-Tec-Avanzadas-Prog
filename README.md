@@ -15,7 +15,7 @@ En el proceso de carga se debe validar que no se superpongan los espectaculos en
 # Desarrollo:
 ## 1. **Diagrama de clases (versión básica inicial)**
 
-![image](https://github.com/user-attachments/assets/4055db5a-3cd2-47bc-8087-8dd4ff9dd380)
+![image](https://github.com/user-attachments/assets/cb79e194-4599-4a30-8089-67dd3b2bc5a7)
 
 ---
 
@@ -27,29 +27,23 @@ En el proceso de carga se debe validar que no se superpongan los espectaculos en
 
 ## 3. **Tecnologías elegidas**
 
-- **Lenguaje**: Java 17.
+- **Lenguaje**: Java 21.
 
-Elegí Java porque es el lenguaje que mejor conozco, es confiable y se usa mucho en proyectos grandes. La versión 17 es bastante actual, estable y tiene mejoras que lo hacen más cómodo de usar.
+Elegí Java porque es el lenguaje que mejor conozco, es confiable y se usa mucho en proyectos grandes. Se eligió la versión 21 porque es la última versión LTS (Long-Term Support) publicada por Oracle.
 
 - **Backend**: Spring Boot (extensión del framework Spring).
 
 Spring Boot ayuda a crear aplicaciones de backend más rápido. Viene con muchas cosas ya listas para usar, como la conexión a la base de datos y el manejo de errores. Además, es muy común en proyectos con Java, y como no lo habia utilizado antes, me gustaría probarlo y sumar experiencia.
 
-- **Frontend**: React con Next.js.
-
-Usaré React porque es una herramienta muy buena para hacer páginas web interactivas. Next.js mejora todavía más React, ayudando a que las páginas carguen más rápido y se organicen mejor.
-
 - **Base de datos**: PostgreSQL.
 
-Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de base de datos relacional. En particular, opté por PostgreSQL porque es una base de datos muy completa y segura, ideal para este tipo de sistemas
+Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de base de datos relacional. En particular, opté por PostgreSQL porque es una base de datos muy completa y segura, ideal para este tipo de sistemas.
 
 ---
 
 ### 4. **Testeo**
 
-- Pruebas unitarias en servicios (FuncionService, EntradaService, etc).
-- Test de integración de login/autenticación.
+- Pruebas unitarias en servicios (Artista_Service, Cuenta_Service, Funcion_Service, Sala_Service) con Spring Boot Test.
 - Otras herramientas:
     - Git para control de versiones.
     - Maven para la gestión de dependencias en el backend.
-    - NPM para gestionar las dependencias del frontend.
