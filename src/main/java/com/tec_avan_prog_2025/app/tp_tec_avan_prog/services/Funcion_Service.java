@@ -1,5 +1,6 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.services;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,15 +33,34 @@ public class Funcion_Service {
     @Lazy
     private Artista_Service artista_Service;
 
+    private FuncionDTO seteoDeFuncionDTO(Funcion funcion){
+        FuncionDTO funcionDTO = funcionMapper.funcionToFuncionDTO(funcion);
+        funcionDTO.setEntradasVendidas(funcion.getEntradas().size());
+        funcionDTO.setEntradasDisponibles(funcion.getSala().getCapacidad() - funcion.getEntradas().size());
+        return funcionDTO;
+    }
+
     public List<FuncionDTO> listarFunciones(){
-        return repo_Funcion.findAll().stream()
-        .map(funcionMapper::funcionToFuncionDTO)
+        return repo_Funcion.findAll().stream().map(funcion -> seteoDeFuncionDTO(funcion))
         .collect(Collectors.toList());
     }
 
+    public List<FuncionDTO> listarFuncionesProximas() {
+        return repo_Funcion.findAll().stream()
+            .filter(f -> !f.getFecha().isBefore(LocalDate.now())) 
+            .map(funcion -> seteoDeFuncionDTO(funcion))
+            .collect(Collectors.toList());
+    }
+
+    public List<FuncionDTO> listarFuncionesAnteriores() {
+        return repo_Funcion.findAll().stream()
+            .filter(f -> f.getFecha().isBefore(LocalDate.now())) 
+            .map(funcion -> seteoDeFuncionDTO(funcion))
+            .collect(Collectors.toList());
+    }
+
     public Optional<FuncionDTO> buscarDTOPorId(Integer id){
-        return repo_Funcion.findById(id)
-        .map(funcionMapper::funcionToFuncionDTO);
+        return repo_Funcion.findById(id).map(funcion -> seteoDeFuncionDTO(funcion));
     }
 
     public Funcion buscarPorId(Integer id){
@@ -75,7 +95,7 @@ public class Funcion_Service {
         repo_Funcion.deleteById(id);
     }
 
-    public void validarSuperposicionFuncion(Funcion nuevaFuncion) {
+    private void validarSuperposicionFuncion(Funcion nuevaFuncion) {
         List<Funcion> funcionesEnSala = repo_Funcion.findBySalaAndFecha(nuevaFuncion.getSala(), nuevaFuncion.getFecha());
 
         LocalTime inicioNuevo = nuevaFuncion.getHora();
@@ -93,7 +113,6 @@ public class Funcion_Service {
             }
         }
     }
-
 
     public void desvincularFuncionesDeSala(Integer idSala) {
         List<Funcion> funcionesAsociadas = repo_Funcion.findAll().stream()

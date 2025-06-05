@@ -2,7 +2,6 @@ package com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +19,6 @@ public class FuncionDTO {
     private Integer duracion;
     private String tipoFuncion;
     private Double precioBaseEntrada;
-    private List<Integer> entradas;
-        
+    private Integer entradasVendidas;
+    private Integer entradasDisponibles;  
 }

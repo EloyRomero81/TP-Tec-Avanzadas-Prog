@@ -32,6 +32,19 @@ public class Funcion_Controller {
         return new ResponseEntity<>(funciones, HttpStatus.OK);
     }
 
+    @GetMapping("/proximas")
+    public ResponseEntity<List<FuncionDTO>> listarFuncionesProximas(){
+        List<FuncionDTO> funciones = funcion_Service.listarFuncionesProximas();
+        return new ResponseEntity<>(funciones, HttpStatus.OK);
+    }
+
+    @GetMapping("/anteriores")
+    public ResponseEntity<List<FuncionDTO>> listarFuncionesAnteriores(){
+        List<FuncionDTO> funciones = funcion_Service.listarFuncionesAnteriores();
+        return new ResponseEntity<>(funciones, HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<FuncionDTO> buscarPorId(@PathVariable Integer id){
         Optional<FuncionDTO> funcion = funcion_Service.buscarDTOPorId(id);
