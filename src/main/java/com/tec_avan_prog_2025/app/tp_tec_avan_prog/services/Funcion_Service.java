@@ -1,9 +1,8 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.services;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.FuncionDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.FuncionNoEncontradaException;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.SuperposicionFuncionException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.mappers.FuncionMapper;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Funcion;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.repositorios.Repo_Funcion;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class Funcion_Service {
@@ -33,7 +32,7 @@ public class Funcion_Service {
     @Lazy
     private Artista_Service artista_Service;
 
-    private FuncionDTO seteoDeFuncionDTO(Funcion funcion){
+    private FuncionDTO mapeoDeFuncionDTO(Funcion funcion){
         FuncionDTO funcionDTO = funcionMapper.funcionToFuncionDTO(funcion);
         funcionDTO.setEntradasVendidas(funcion.getEntradas().size());
         funcionDTO.setEntradasDisponibles(funcion.getSala().getCapacidad() - funcion.getEntradas().size());
@@ -41,31 +40,33 @@ public class Funcion_Service {
     }
 
     public List<FuncionDTO> listarFunciones(){
-        return repo_Funcion.findAll().stream().map(funcion -> seteoDeFuncionDTO(funcion))
+        return repo_Funcion.findAll().stream().map(funcion -> mapeoDeFuncionDTO(funcion))
         .collect(Collectors.toList());
     }
 
     public List<FuncionDTO> listarFuncionesProximas() {
         return repo_Funcion.findAll().stream()
             .filter(f -> !f.getFecha().isBefore(LocalDate.now())) 
-            .map(funcion -> seteoDeFuncionDTO(funcion))
+            .map(funcion -> mapeoDeFuncionDTO(funcion))
             .collect(Collectors.toList());
     }
 
     public List<FuncionDTO> listarFuncionesAnteriores() {
         return repo_Funcion.findAll().stream()
             .filter(f -> f.getFecha().isBefore(LocalDate.now())) 
-            .map(funcion -> seteoDeFuncionDTO(funcion))
+            .map(funcion -> mapeoDeFuncionDTO(funcion))
             .collect(Collectors.toList());
     }
 
-    public Optional<FuncionDTO> buscarDTOPorId(Integer id){
-        return repo_Funcion.findById(id).map(funcion -> seteoDeFuncionDTO(funcion));
+    public FuncionDTO buscarDTOPorId(Integer id){
+        Funcion funcion = repo_Funcion.findById(id)
+            .orElseThrow(() -> new FuncionNoEncontradaException("Funcion con id: "+id+" no encontrado"));
+        return mapeoDeFuncionDTO(funcion);
     }
 
     public Funcion buscarPorId(Integer id){
         return repo_Funcion.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Funcion con id: "+id+" no encontrado"));
+            .orElseThrow(() -> new FuncionNoEncontradaException("Funcion con id: "+id+" no encontrado"));
     }
 
     public FuncionDTO guardar(FuncionDTO funcionDTO){
@@ -73,7 +74,7 @@ public class Funcion_Service {
         funcion.setSala(sala_Service.buscarPorId(funcionDTO.getNroSala()));
         funcion.setArtista(artista_Service.buscarPorNombre(funcionDTO.getNombreArtista()));
         validarSuperposicionFuncion(funcion);
-        return funcionMapper.funcionToFuncionDTO(repo_Funcion.save(funcion));
+        return mapeoDeFuncionDTO(repo_Funcion.save(funcion));
     }
 
     public FuncionDTO actualizar(Integer id, FuncionDTO funcionDTO){
@@ -86,7 +87,7 @@ public class Funcion_Service {
         funcionExistente.setTipoFuncion(funcionDTO.getTipoFuncion());
         funcionExistente.setPrecioBaseEntrada(funcionDTO.getPrecioBaseEntrada());
         validarSuperposicionFuncion(funcionExistente);
-        return funcionMapper.funcionToFuncionDTO(repo_Funcion.save(funcionExistente));
+        return mapeoDeFuncionDTO(repo_Funcion.save(funcionExistente));
     }
 
     public void eliminarPorId(Integer id){
@@ -98,18 +99,24 @@ public class Funcion_Service {
     private void validarSuperposicionFuncion(Funcion nuevaFuncion) {
         List<Funcion> funcionesEnSala = repo_Funcion.findBySalaAndFecha(nuevaFuncion.getSala(), nuevaFuncion.getFecha());
 
-        LocalTime inicioNuevo = nuevaFuncion.getHora();
-        LocalTime finNuevo = inicioNuevo.plusMinutes(nuevaFuncion.getDuracion()).plusHours(1); // + 1 hora limpieza
+        LocalDateTime inicioNuevo = LocalDateTime.of(nuevaFuncion.getFecha(), nuevaFuncion.getHora());
+        LocalDateTime finNuevo = inicioNuevo.plusMinutes(nuevaFuncion.getDuracion()).plusHours(1);
+        System.out.println("inicio nuevo: " + inicioNuevo);
+        System.out.println("fin nuevo:" + finNuevo);
 
         for (Funcion f : funcionesEnSala) {
             if(f.getIdFuncion() == nuevaFuncion.getIdFuncion()) continue; // Ignorar misma función en update
 
-            LocalTime inicioExistente = f.getHora();
-            LocalTime finExistente = inicioExistente.plusMinutes(f.getDuracion()).plusHours(1);
+            LocalDateTime inicioExistente = LocalDateTime.of(f.getFecha(), f.getHora());
+            LocalDateTime finExistente = inicioExistente.plusMinutes(f.getDuracion()).plusHours(1);
+            System.out.println("inicio existente: "+inicioExistente);
+            System.out.println("fin existente:"+finExistente);
 
             boolean seSolapan = inicioNuevo.isBefore(finExistente) && finNuevo.isAfter(inicioExistente);
+            System.out.println("Estado del booleano: " + seSolapan);
+
             if(seSolapan) {
-                throw new IllegalArgumentException("La función se superpone con otra función en la sala");
+                throw new SuperposicionFuncionException("La función se superpone con otra función en la sala");
             }
         }
     }

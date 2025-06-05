@@ -1,7 +1,6 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.SalaDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.services.Sala_Service;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @RestController
 @RequestMapping("/salas")
 public class Sala_Controller {
@@ -34,9 +31,8 @@ public class Sala_Controller {
     
     @GetMapping("/{id}")
     public ResponseEntity<SalaDTO> buscarPorId(@PathVariable Integer id){
-        Optional<SalaDTO> sala = sala_Service.buscarDTOPorId(id);
-        return sala.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        SalaDTO sala = sala_Service.buscarDTOPorId(id);
+        return new ResponseEntity<>(sala, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -47,21 +43,13 @@ public class Sala_Controller {
 
     @PutMapping("/{id}")
     public ResponseEntity<SalaDTO> actualizar(@PathVariable Integer id, @RequestBody SalaDTO sala){
-        try {
-            SalaDTO actualizado = sala_Service.actualizar(id, sala); 
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        SalaDTO actualizado = sala_Service.actualizar(id, sala); 
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable Integer id){
-        try{
-            sala_Service.eliminarPorId(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        sala_Service.eliminarPorId(id);
+        return ResponseEntity.noContent().build();
     }
 }

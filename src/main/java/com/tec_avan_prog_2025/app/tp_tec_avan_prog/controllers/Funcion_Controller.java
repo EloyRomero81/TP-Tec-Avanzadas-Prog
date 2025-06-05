@@ -1,7 +1,6 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.FuncionDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.services.Funcion_Service;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/funciones")
@@ -47,9 +44,8 @@ public class Funcion_Controller {
 
     @GetMapping("/{id}")
     public ResponseEntity<FuncionDTO> buscarPorId(@PathVariable Integer id){
-        Optional<FuncionDTO> funcion = funcion_Service.buscarDTOPorId(id);
-        return funcion.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        FuncionDTO funcion = funcion_Service.buscarDTOPorId(id);
+        return new ResponseEntity<>(funcion, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -60,21 +56,13 @@ public class Funcion_Controller {
 
     @PutMapping("/{id}")
     public ResponseEntity<FuncionDTO> actualizar(@PathVariable Integer id, @RequestBody FuncionDTO funcion){
-        try {
-            FuncionDTO actualizado = funcion_Service.actualizar(id, funcion); 
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        FuncionDTO actualizado = funcion_Service.actualizar(id, funcion); 
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable Integer id){
-        try{
-            funcion_Service.eliminarPorId(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        funcion_Service.eliminarPorId(id);
+        return ResponseEntity.noContent().build();
     }
 }

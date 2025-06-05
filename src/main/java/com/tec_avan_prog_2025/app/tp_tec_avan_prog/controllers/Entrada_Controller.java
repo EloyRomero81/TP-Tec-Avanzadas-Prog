@@ -1,7 +1,6 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.EntradaDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.services.Entrada_Service;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @RestController
 @RequestMapping("/entradas")
 public class Entrada_Controller {
@@ -34,9 +31,8 @@ public class Entrada_Controller {
 
     @GetMapping("/{id}")
     public ResponseEntity<EntradaDTO> buscarPorId(@PathVariable Integer id){
-        Optional<EntradaDTO> entrada = entrada_Service.buscarDTOPorId(id);
-        return entrada.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        EntradaDTO entrada = entrada_Service.buscarDTOPorId(id);
+        return new ResponseEntity<>(entrada, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -47,21 +43,13 @@ public class Entrada_Controller {
 
     @PutMapping("/{id}")
     public ResponseEntity<EntradaDTO> actualizar(@PathVariable Integer id, @RequestBody EntradaDTO entrada){
-        try {
-            EntradaDTO actualizado = entrada_Service.actualizar(id, entrada);
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        EntradaDTO actualizado = entrada_Service.actualizar(id, entrada);
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable Integer id){
-        try{
-            entrada_Service.eliminarPorId(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        entrada_Service.eliminarPorId(id);
+        return ResponseEntity.noContent().build();
     }
 }

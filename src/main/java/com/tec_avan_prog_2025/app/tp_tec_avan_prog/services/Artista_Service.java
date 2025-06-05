@@ -1,19 +1,16 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.ArtistaDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.ArtistaNoEncontradoException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.mappers.ArtistaMapper;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Artista;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.repositorios.Repo_Artista;
-
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class Artista_Service {
@@ -30,19 +27,20 @@ public class Artista_Service {
         .collect(Collectors.toList());
     }
 
-    public Optional<ArtistaDTO> buscarDTOPorId(Integer id){
-        return repo_Artista.findById(id)
-        .map(artistaMapper::artistaToArtistaDTO); 
+    public ArtistaDTO buscarDTOPorId(Integer id){
+        Artista artista = repo_Artista.findById(id)
+            .orElseThrow(() -> new ArtistaNoEncontradoException("Artista con id: " + id + " no encontrado"));
+        return artistaMapper.artistaToArtistaDTO(artista);
     }
     
     public Artista buscarPorId(Integer id){
         return repo_Artista.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Artista con id: "+id+" no encontrado"));
+            .orElseThrow(() -> new ArtistaNoEncontradoException("Artista con id: "+id+" no encontrado"));
     }
 
     public Artista buscarPorNombre(String nombre){
         return repo_Artista.findByNombre(nombre)
-            .orElseThrow(() -> new EntityNotFoundException("Artista con nombre: "+nombre+" no encontrado"));
+            .orElseThrow(() -> new ArtistaNoEncontradoException("Artista con nombre: "+nombre+" no encontrado"));
     }
 
     public ArtistaDTO guardar(ArtistaDTO artistaDTO){

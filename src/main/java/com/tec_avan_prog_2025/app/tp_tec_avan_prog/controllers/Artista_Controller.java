@@ -1,7 +1,6 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.ArtistaDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.services.Artista_Service;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @RestController
 @RequestMapping("/artistas")
 public class Artista_Controller {
@@ -34,10 +31,10 @@ public class Artista_Controller {
 
     @GetMapping("/{id}")
     public ResponseEntity<ArtistaDTO> buscarPorId(@PathVariable Integer id){
-        Optional<ArtistaDTO> artista = artista_Service.buscarDTOPorId(id);
-        return artista.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        ArtistaDTO artista = artista_Service.buscarDTOPorId(id);
+        return new ResponseEntity<>(artista, HttpStatus.OK);
     }
+
 
     @PostMapping()
     public ResponseEntity<ArtistaDTO> insertar(@RequestBody ArtistaDTO artista){
@@ -47,21 +44,13 @@ public class Artista_Controller {
 
     @PutMapping("/{id}")
     public ResponseEntity<ArtistaDTO> actualizar(@PathVariable Integer id, @RequestBody ArtistaDTO artista){
-        try {
-            ArtistaDTO actualizado = artista_Service.actualizar(id, artista); 
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ArtistaDTO actualizado = artista_Service.actualizar(id, artista); 
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable Integer id){
-        try{
-            artista_Service.eliminarPorId(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        artista_Service.eliminarPorId(id);
+        return ResponseEntity.noContent().build();
     }
 }

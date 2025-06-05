@@ -1,7 +1,6 @@
 package com.tec_avan_prog_2025.app.tp_tec_avan_prog.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.CuentaDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.services.Cuenta_Service;
-
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +32,8 @@ public class Cuenta_Controller {
 
     @GetMapping("/{id}")
     public ResponseEntity<CuentaDTO> buscarPorId(@PathVariable Integer id){
-        Optional<CuentaDTO> cuenta = cuenta_Service.buscarDTOPorId(id);
-        return cuenta.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        CuentaDTO cuenta = cuenta_Service.buscarDTOPorId(id);
+        return new ResponseEntity<>(cuenta, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -48,22 +44,13 @@ public class Cuenta_Controller {
 
     @PutMapping("/{id}")
     public ResponseEntity<CuentaDTO> actualizar(@PathVariable Integer id, @RequestBody CuentaDTO cuenta){
-        try {
-            CuentaDTO actualizado = cuenta_Service.actualizar(id, cuenta); 
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        CuentaDTO actualizado = cuenta_Service.actualizar(id, cuenta); 
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrar(@PathVariable Integer id){
-        try{
-            cuenta_Service.eliminarPorId(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        }
+        cuenta_Service.eliminarPorId(id);
+        return ResponseEntity.noContent().build();
     }
-
 }

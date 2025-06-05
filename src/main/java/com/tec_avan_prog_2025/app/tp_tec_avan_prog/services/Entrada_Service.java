@@ -2,7 +2,6 @@ package com.tec_avan_prog_2025.app.tp_tec_avan_prog.services;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.EntradaDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.CapacidadExcedidaException;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.EntradaNoEncontradaException;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.FuncionPasadaException;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.TipoEntradaInvalidoException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.mappers.EntradaMapper;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Cuenta;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Entrada;
@@ -37,9 +40,10 @@ public class Entrada_Service {
         .collect(Collectors.toList());
     }
 
-    public Optional<EntradaDTO> buscarDTOPorId(Integer id){
-        return repo_Entrada.findById(id)
-        .map(entradaMapper::entradaToEntradaDTO); 
+    public EntradaDTO buscarDTOPorId(Integer id){
+        Entrada entrada = repo_Entrada.findById(id)
+            .orElseThrow(() -> new EntradaNoEncontradaException("Entrada con id: "+id+" no encontrada")); 
+        return entradaMapper.entradaToEntradaDTO(entrada);
     }
 
     public Entrada buscarPorId(Integer id){
@@ -73,7 +77,7 @@ public class Entrada_Service {
 
     public void eliminarPorId(Integer id){
         repo_Entrada.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Entrada con id: "+id+" no encontrada"));
+        .orElseThrow(() -> new EntradaNoEncontradaException("Entrada con id: "+id+" no encontrada"));
         repo_Entrada.deleteById(id);
     }
 
@@ -84,18 +88,18 @@ public class Entrada_Service {
         if (tipoSala.equalsIgnoreCase("Sala Principal")) {
             if (tipoEntrada.equalsIgnoreCase("A")) return base * 2;
             if (tipoEntrada.equalsIgnoreCase("B")) return base;
-            throw new IllegalArgumentException("Tipo de entrada inválido para Sala Principal. Use A o B.");
+            throw new TipoEntradaInvalidoException("Tipo de entrada inválido para Sala Principal. Use A o B.");
         }
         if (tipoSala.equalsIgnoreCase("Anfiteatro")) {
             if (tipoEntrada.equalsIgnoreCase("Unica")) return base;
-            throw new IllegalArgumentException("Tipo de entrada inválido para Anfiteatro. Solo Unica disponible.");
+            throw new TipoEntradaInvalidoException("Tipo de entrada inválido para Anfiteatro. Solo Unica disponible.");
         }
-        throw new IllegalArgumentException("Tipo de sala desconocido");
+        throw new TipoEntradaInvalidoException("Tipo de sala desconocido");
     }
 
     private void validarFecha(LocalDate fecha){
         if (fecha.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("No se pueden comprar entradas para funciones ya realizadas");
+            throw new FuncionPasadaException("No se pueden comprar entradas para funciones ya realizadas");
         }
     }
 
@@ -103,7 +107,7 @@ public class Entrada_Service {
         long entradasVendidas = repo_Entrada.countByFuncion_IdFuncion(funcion.getIdFuncion());
         int capacidad = funcion.getSala().getCapacidad();
         if (entradasVendidas >= capacidad) {
-            throw new IllegalStateException("No hay más capacidad disponible para esta función");
+            throw new CapacidadExcedidaException("No hay más capacidad disponible para esta función");
         }
     }
 

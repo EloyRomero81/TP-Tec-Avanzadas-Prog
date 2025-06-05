@@ -15,6 +15,8 @@ public interface FuncionMapper {
 
     @Mapping(source = "sala.nroSala", target = "nroSala")
     @Mapping(source = "artista.nombre", target = "nombreArtista")
+    @Mapping(target = "entradasDisponibles", ignore = true)
+    @Mapping(target = "entradasVendidas", ignore = true)
     FuncionDTO funcionToFuncionDTO(Funcion funcion);
 
     @Mapping(target = "sala", ignore = true) // Se ignora el atributo de sala y se resuelve en service
