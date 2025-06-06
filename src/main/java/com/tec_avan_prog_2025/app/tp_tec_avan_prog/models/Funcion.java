@@ -2,8 +2,10 @@ package com.tec_avan_prog_2025.app.tp_tec_avan_prog.models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,6 +40,6 @@ public class Funcion {
     private String tipoFuncion;
     private Double precioBaseEntrada;
 
-    @OneToMany(mappedBy = "funcion")
-    private List<Entrada> entradas;
+    @OneToMany(mappedBy = "funcion", cascade = CascadeType.ALL, orphanRemoval = true) //Si se borra una funcion, se borra sus entradas
+    private List<Entrada> entradas = new ArrayList<>();
 }

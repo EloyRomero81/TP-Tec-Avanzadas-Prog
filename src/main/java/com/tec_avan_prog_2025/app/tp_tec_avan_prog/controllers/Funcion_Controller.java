@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.FuncionDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.crearFuncionDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.services.Funcion_Service;
 
 @RestController
@@ -49,8 +50,8 @@ public class Funcion_Controller {
     }
 
     @PostMapping()
-    public ResponseEntity<FuncionDTO> insertar(@RequestBody FuncionDTO funcion){
-        FuncionDTO insertado = funcion_Service.guardar(funcion);
+    public ResponseEntity<FuncionDTO> insertar(@RequestBody crearFuncionDTO crearFuncionDTO){
+        FuncionDTO insertado = funcion_Service.guardar(crearFuncionDTO);
         return new ResponseEntity<>(insertado, HttpStatus.CREATED);
     }
 

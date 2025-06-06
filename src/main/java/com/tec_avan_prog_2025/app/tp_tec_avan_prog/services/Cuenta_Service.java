@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.CuentaDTO;
@@ -19,10 +18,6 @@ public class Cuenta_Service {
     private Repo_Cuenta repo_Cuenta;
     @Autowired
     private CuentaMapper cuentaMapper;
-    @Autowired
-    @Lazy
-    private Entrada_Service entrada_Service;
-
 
     public List<CuentaDTO> listarCuentas(){
         return repo_Cuenta.findAll().stream()
@@ -48,7 +43,6 @@ public class Cuenta_Service {
 
     public CuentaDTO actualizar(Integer id, CuentaDTO cuentaDTO){
         Cuenta cuentaExistente = buscarPorId(id);
-        cuentaExistente.setTipoCuenta(cuentaDTO.getTipoCuenta());
         cuentaExistente.setNombre(cuentaDTO.getNombre());
         cuentaExistente.setEmail(cuentaDTO.getEmail());
         return cuentaMapper.cuentaToCuentaDTO(repo_Cuenta.save(cuentaExistente));
@@ -56,7 +50,6 @@ public class Cuenta_Service {
 
     public void eliminarPorId(Integer id){
         buscarPorId(id);
-        entrada_Service.desvincularEntradasDeCuenta(id);
         repo_Cuenta.deleteById(id);
     }
 }

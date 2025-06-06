@@ -37,7 +37,8 @@ public class GlobalExceptionHandler {
         TipoEntradaInvalidoException.class,
         FuncionPasadaException.class,
         CapacidadExcedidaException.class,
-        SuperposicionFuncionException.class
+        SuperposicionFuncionException.class,
+        AccesoDenegadoException.class
     })
     public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());

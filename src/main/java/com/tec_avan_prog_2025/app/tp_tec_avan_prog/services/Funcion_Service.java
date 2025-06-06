@@ -10,10 +10,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.FuncionDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.crearFuncionDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.AccesoDenegadoException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.FuncionNoEncontradaException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.SuperposicionFuncionException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.mappers.FuncionMapper;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Cuenta;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Funcion;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Cuenta.TipoCuenta;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.repositorios.Repo_Funcion;
 
 @Service
@@ -27,10 +31,10 @@ public class Funcion_Service {
     private Sala_Service sala_Service;
     @Autowired
     @Lazy
-    private Entrada_Service entrada_Service;
+    private Artista_Service artista_Service;
     @Autowired
     @Lazy
-    private Artista_Service artista_Service;
+    private Cuenta_Service cuenta_Service;
 
     private FuncionDTO mapeoDeFuncionDTO(Funcion funcion){
         FuncionDTO funcionDTO = funcionMapper.funcionToFuncionDTO(funcion);
@@ -69,10 +73,14 @@ public class Funcion_Service {
             .orElseThrow(() -> new FuncionNoEncontradaException("Funcion con id: "+id+" no encontrado"));
     }
 
-    public FuncionDTO guardar(FuncionDTO funcionDTO){
-        Funcion funcion = funcionMapper.funcionDTOToFuncion(funcionDTO);
-        funcion.setSala(sala_Service.buscarPorId(funcionDTO.getNroSala()));
-        funcion.setArtista(artista_Service.buscarPorNombre(funcionDTO.getNombreArtista()));
+    public FuncionDTO guardar(crearFuncionDTO crearFuncionDTO){
+        Cuenta cuenta = cuenta_Service.buscarPorId(crearFuncionDTO.getIdCuenta());
+        if (cuenta.getTipoCuenta()!=TipoCuenta.ADMINISTRADOR){
+            throw new AccesoDenegadoException("Solo los administradores pueden crear funciones");
+        } 
+        Funcion funcion = funcionMapper.crearFuncionDTOToFuncion(crearFuncionDTO);
+        funcion.setSala(sala_Service.buscarPorId(crearFuncionDTO.getNroSala()));
+        funcion.setArtista(artista_Service.buscarPorNombre(crearFuncionDTO.getNombreArtista()));
         validarSuperposicionFuncion(funcion);
         return mapeoDeFuncionDTO(repo_Funcion.save(funcion));
     }
@@ -92,7 +100,6 @@ public class Funcion_Service {
 
     public void eliminarPorId(Integer id){
         buscarPorId(id);
-        entrada_Service.desvincularEntradasDeFuncion(id);
         repo_Funcion.deleteById(id);
     }
 

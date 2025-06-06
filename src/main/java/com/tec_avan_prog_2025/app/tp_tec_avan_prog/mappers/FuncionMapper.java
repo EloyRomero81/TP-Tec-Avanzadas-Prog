@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.FuncionDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.crearFuncionDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Entrada;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Funcion;
 
@@ -23,6 +24,11 @@ public interface FuncionMapper {
     @Mapping(target = "artista", ignore = true) // Lo mismo con artista y entradas
     @Mapping(target = "entradas", ignore = true)
     Funcion funcionDTOToFuncion(FuncionDTO funcionDTO);
+
+    @Mapping(target = "sala", ignore = true)
+    @Mapping(target = "artista", ignore = true)
+    @Mapping(target = "entradas", ignore = true)
+    Funcion crearFuncionDTOToFuncion(crearFuncionDTO crearFuncionDTO); //DTO para crear una funcion, que trae idCuenta.
 
     // Método auxiliar para transformar entradas a lista de IDs
     default List<Integer> mapEntradasToIds(List<Entrada> entradas) {

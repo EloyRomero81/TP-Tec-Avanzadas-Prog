@@ -2,7 +2,10 @@ package com.tec_avan_prog_2025.app.tp_tec_avan_prog.models;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,10 +24,17 @@ public class Cuenta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCuenta;
 
-    private String tipoCuenta;
+    @Enumerated(EnumType.STRING) //asegura que se guarde como "USUARIO" o "ADMINISTRADOR" en la base de datos.
+    private TipoCuenta tipoCuenta;
+    
     private String nombre;
     private String email;
 
-    @OneToMany(mappedBy = "cuenta")
+    @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true) //Si se borra una cuenta, se borra sus entradas
     private List<Entrada> entradas;
+
+    public enum TipoCuenta {
+        USUARIO,
+        ADMINISTRADOR
+    }
 }

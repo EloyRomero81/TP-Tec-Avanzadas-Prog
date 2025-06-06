@@ -110,24 +110,4 @@ public class Entrada_Service {
             throw new CapacidadExcedidaException("No hay más capacidad disponible para esta función");
         }
     }
-
-    public void desvincularEntradasDeFuncion(Integer idFuncion) {
-        List<Entrada> entradasAsociadas = repo_Entrada.findAll().stream()
-            .filter(e -> e.getFuncion() != null && e.getFuncion().getIdFuncion().equals(idFuncion))
-            .collect(Collectors.toList());
-        for (Entrada e : entradasAsociadas) {
-            e.setFuncion(null);
-        }
-        repo_Entrada.saveAll(entradasAsociadas);
-    }
-
-    public void desvincularEntradasDeCuenta(Integer idCuenta){
-        List<Entrada> entradas = repo_Entrada.findAll().stream()
-            .filter(e -> e.getCuenta() != null && e.getCuenta().getIdCuenta() == idCuenta)
-            .collect(Collectors.toList());
-        for (Entrada e : entradas) {
-            e.setCuenta(null);
-        }
-        repo_Entrada.saveAll(entradas);
-    }
 }
