@@ -43,7 +43,15 @@ Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de bas
 
 ### 4. **Testeo**
 
-- Pruebas unitarias en servicios (Artista_Service, Cuenta_Service, Funcion_Service, Sala_Service) con Spring Boot Test.
-- Otras herramientas:
-    - Git para control de versiones.
-    - Maven para la gestión de dependencias en el backend.
+- Pruebas unitarias en servicios, controllers y repositorios con Spring Boot Test.
+
+## Proceso de despliegue
+### 1 - Clonar el repositorio:
+`git clone https://github.com/EloyRomero81/TP-Tec-Avanzadas-Prog.git
+
+### 2 - Moverse a la carpeta del proyecto
+`cd TP-Tec-Avanzadas-Prog
+
+### 3 - Levantar la API con Docker
+`docker-compose up --build
+
