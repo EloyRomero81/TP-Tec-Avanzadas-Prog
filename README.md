@@ -45,13 +45,15 @@ Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de bas
 
 - Pruebas unitarias en servicios, controllers y repositorios con Spring Boot Test.
 
+
 ## Proceso de despliegue
+
 ### 1 - Clonar el repositorio:
-`git clone https://github.com/EloyRomero81/TP-Tec-Avanzadas-Prog.git
+```git clone https://github.com/EloyRomero81/TP-Tec-Avanzadas-Prog.git```
 
 ### 2 - Moverse a la carpeta del proyecto
-`cd TP-Tec-Avanzadas-Prog
+```cd TP-Tec-Avanzadas-Prog```
 
 ### 3 - Levantar la API con Docker
-`docker-compose up --build
+```docker-compose up --build```
 
