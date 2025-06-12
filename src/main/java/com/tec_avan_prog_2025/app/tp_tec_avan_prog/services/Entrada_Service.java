@@ -19,8 +19,6 @@ import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Entrada;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.models.Funcion;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.repositorios.Repo_Entrada;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @Service
 public class Entrada_Service {
     @Autowired
@@ -48,7 +46,7 @@ public class Entrada_Service {
 
     public Entrada buscarPorId(Integer id){
         return repo_Entrada.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Entrada con id: "+id+" no encontrada"));
+        .orElseThrow(() -> new EntradaNoEncontradaException("Entrada con id: "+id+" no encontrada"));
     }
 
     public EntradaDTO guardar(EntradaDTO entradaDTO){

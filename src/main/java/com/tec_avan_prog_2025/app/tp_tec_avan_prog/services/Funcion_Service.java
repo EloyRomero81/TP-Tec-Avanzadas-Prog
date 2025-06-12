@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.FuncionDTO;
-import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.crearFuncionDTO;
+import com.tec_avan_prog_2025.app.tp_tec_avan_prog.DTO.CrearFuncionDTO;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.AccesoDenegadoException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.FuncionNoEncontradaException;
 import com.tec_avan_prog_2025.app.tp_tec_avan_prog.exceptions.SuperposicionFuncionException;
@@ -73,7 +73,7 @@ public class Funcion_Service {
             .orElseThrow(() -> new FuncionNoEncontradaException("Funcion con id: "+id+" no encontrado"));
     }
 
-    public FuncionDTO guardar(crearFuncionDTO crearFuncionDTO){
+    public FuncionDTO guardar(CrearFuncionDTO crearFuncionDTO){
         Cuenta cuenta = cuenta_Service.buscarPorId(crearFuncionDTO.getIdCuenta());
         if (cuenta.getTipoCuenta()!=TipoCuenta.ADMINISTRADOR){
             throw new AccesoDenegadoException("Solo los administradores pueden crear funciones");
@@ -108,20 +108,11 @@ public class Funcion_Service {
 
         LocalDateTime inicioNuevo = LocalDateTime.of(nuevaFuncion.getFecha(), nuevaFuncion.getHora());
         LocalDateTime finNuevo = inicioNuevo.plusMinutes(nuevaFuncion.getDuracion()).plusHours(1);
-        System.out.println("inicio nuevo: " + inicioNuevo);
-        System.out.println("fin nuevo:" + finNuevo);
-
         for (Funcion f : funcionesEnSala) {
             if(f.getIdFuncion() == nuevaFuncion.getIdFuncion()) continue; // Ignorar misma función en update
-
             LocalDateTime inicioExistente = LocalDateTime.of(f.getFecha(), f.getHora());
             LocalDateTime finExistente = inicioExistente.plusMinutes(f.getDuracion()).plusHours(1);
-            System.out.println("inicio existente: "+inicioExistente);
-            System.out.println("fin existente:"+finExistente);
-
             boolean seSolapan = inicioNuevo.isBefore(finExistente) && finNuevo.isAfter(inicioExistente);
-            System.out.println("Estado del booleano: " + seSolapan);
-
             if(seSolapan) {
                 throw new SuperposicionFuncionException("La función se superpone con otra función en la sala");
             }

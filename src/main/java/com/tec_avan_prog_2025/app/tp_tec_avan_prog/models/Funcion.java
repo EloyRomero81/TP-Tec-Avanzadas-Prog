@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +23,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "funciones")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Funcion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idFuncion;
@@ -41,5 +46,6 @@ public class Funcion {
     private Double precioBaseEntrada;
 
     @OneToMany(mappedBy = "funcion", cascade = CascadeType.ALL, orphanRemoval = true) //Si se borra una funcion, se borra sus entradas
+    @Builder.Default
     private List<Entrada> entradas = new ArrayList<>();
 }

@@ -4,13 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class crearFuncionDTO {
+@Builder
+public class CrearFuncionDTO {
     private Integer idCuenta;
     private Integer idFuncion;
     private Integer nroSala;
