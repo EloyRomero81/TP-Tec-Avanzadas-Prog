@@ -58,3 +58,14 @@ Como el trabajo sigue un modelo de datos relacional, elegí usar un motor de bas
 ### 3 - Levantar la API con Docker
 ```docker-compose up --build```
 
+### 4 - Probar los endpoints
+Una vez levantada la aplicación, se puede acceder a los endpoints expuestos en:
+```http://localhost:8080```
+Ejemplos:
+```http://localhost:8080/cuentas```
+```http://localhost:8080/salas```
+```http://localhost:8080/funciones```
+```http://localhost:8080/funciones/proximas```
+```http://localhost:8080/funciones/anteriores```
+```http://localhost:8080/entradas```
+```http://localhost:8080/artistas```
